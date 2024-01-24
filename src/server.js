@@ -6,8 +6,8 @@ import morgan from "morgan";
 import config from "../config/index.js";
 import routes from "./routes/index.js";
 import pageNotFound from "./utils/page-not-found.js";
-import errorHandler from "./utils/error-handler.js";
 import connectDb from "./utils/connectDb.js";
+import { errorHandler } from "./utils/error/error-handler.js";
 
 
 const app = express();
@@ -36,6 +36,7 @@ app.set("views", "src/views");
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
+
 
 
 app.use("/", routes);
