@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(result);
     }
 
+    console.log('Header ', header);
+    console.log('Popup ', popup);
+
     const headerHtml = `
     <a href="${header.link}" id="header_${header._id}"  target="_blank">
     <div id="ad_text">
