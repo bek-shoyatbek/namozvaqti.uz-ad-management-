@@ -7,6 +7,10 @@ import authorizeUser from "../middlewares/authorization.js";
 import { add, getAddPage } from "../controllers/add.js";
 import { getAnalyticsPage } from "../controllers/analytics.js";
 import upload from "../utils/multer/index.js";
+import { setActiveAd } from "../controllers/active-ad.js";
+import { editAd, getEditPage } from "../controllers/edit.js";
+import { deleteAd } from "../controllers/delete.js";
+import { getAds } from "../controllers/getAds.js";
 
 const router = express.Router();
 
@@ -23,7 +27,22 @@ router.get("/home", authorizeUser, getHome);
 // Add 
 router.get("/add", authorizeUser, getAddPage);
 
+
+router.get("/get-ads", getAds);
+
 router.post("/add", authorizeUser, upload.single("image"), add);
+
+// Edit 
+
+router.put("/active", authorizeUser, setActiveAd);
+
+router.post("/update/:id", authorizeUser, upload.single("image"), editAd);
+
+router.get("/edit/:id", authorizeUser, getEditPage);
+
+router.delete("/delete", authorizeUser, deleteAd);
+
+
 
 // Analytics
 

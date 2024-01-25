@@ -1,4 +1,5 @@
 import "dotenv/config";
+import appRootPath from "app-root-path";
 
 
 export default {
@@ -6,5 +7,6 @@ export default {
     mongoUri: process.env.MONGO_URI,
     sessionSecret: process.env.SESSION_SECRET,
     adminLogin: process.env.ADMIN_LOGIN,
-    adminPassword: process.env.ADMIN_PASS
+    adminPassword: process.env.ADMIN_PASS,
+    appRootPath: appRootPath.path
 }

@@ -17,9 +17,19 @@ const adSchema = new Schema({
         required: true
     },
 
-    clicked: Number,
+    clicked: {
+        type: Number,
+        default: 0,
+    },
 
-    seen: Number,
+    seen: {
+        type: Number,
+        default: 0,
+    },
+    active: {
+        type: Boolean,
+        default: false,
+    }
 },
     {
         timestamps: true

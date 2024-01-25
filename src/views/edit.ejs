@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
   </head>
   <style>
     .form-container {
@@ -61,43 +61,47 @@
   <body>
     <%- include("navbar") %>
     <div class="form-container">
-      <h1>Add Product</h1>
+      <h1>Edit Product</h1>
 
-      <form
-        action="/add"
-        method="post"
-        enctype="multipart/form-data"
-        id="myForm"
-      >
+      <form method="post" enctype="multipart/form-data" id="myForm">
         <div class="form-group">
           <label for="name">Name:</label>
-          <input type="text" id="name" name="name" required />
+          <input type="text" id="name" name="name" value="<%= ad.name %>" />
         </div>
 
         <div class="form-group">
           <label for="link">Link:</label>
-          <input type="text" id="link" name="link" required />
+          <input type="text" id="link" name="link" value="<%= ad.link %>" />
         </div>
 
         <div class="form-group">
           <label for="image">Image:</label>
-          <input type="file" id="image" name="image" required />
+          <input type="file" id="image" name="image" />
         </div>
 
         <div class="form-group">
           <label for="location">Location:</label>
           <select id="location" name="location">
-            <option value="header">Header</option>
+            <% if (ad.location=="header") { %>
+            <option value="header" selected>Header</option>
             <option value="popup">Popup</option>
+            <% } else { %>
+            <option value="header">Header</option>
+            <option value="popup" selected>Popup</option>
+            <% } %>
           </select>
         </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit" class="ad_id" id="<%= ad._id %>">Update</button>
       </form>
     </div>
     <script>
       // Get form element
       const form = document.getElementById("myForm");
+
+      const adId = document.querySelector(".ad_id").id;
+
+      // Add submit event listener
 
       // Add submit event listener
       form.addEventListener("submit", (e) => {
@@ -108,7 +112,7 @@
         const formData = new FormData(form);
 
         // AJAX request to submit data
-        fetch("/add", {
+        fetch("/update/" + adId, {
           method: "POST",
           body: formData,
         })
@@ -118,12 +122,10 @@
             Swal.fire({
               position: "top-center",
               icon: "success",
-              title: "Your work has been saved",
+              title: "Updated",
               showConfirmButton: false,
               timer: 1500,
             });
-            // Clear form
-            form.reset();
           })
           .catch((error) => {
             console.error(error.response);
