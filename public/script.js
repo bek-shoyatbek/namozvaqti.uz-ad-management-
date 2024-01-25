@@ -1,4 +1,4 @@
-const API = "http://localhost:2000";
+const API = "http://161.35.198.166:2000";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
