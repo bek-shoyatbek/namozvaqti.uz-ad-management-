@@ -115,8 +115,8 @@
                     class="fa-solid fa-arrow-right"> </i></a>
               </h3>
               <h3>| <%= ad.location %> |</h3>
-              <p><i class="fa-regular fa-eye"></i> 10 </p>
-              <p><i class="fa-solid fa-circle-play"></i> 5</p>
+              <p><i class="fa-regular fa-eye"></i> <%= ad.seen %> </p>
+              <p><i class="fa-solid fa-circle-play"></i> <%= ad.clicked %></p>
             </div>
             <div class="actions">
               <% if(!ad.active) { %>

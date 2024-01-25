@@ -5,12 +5,12 @@ import { getLogin, login } from "../controllers/login.js";
 import { getHome } from "../controllers/home.js";
 import authorizeUser from "../middlewares/authorization.js";
 import { add, getAddPage } from "../controllers/add.js";
-import { getAnalyticsPage } from "../controllers/analytics.js";
 import upload from "../utils/multer/index.js";
 import { setActiveAd } from "../controllers/active-ad.js";
 import { editAd, getEditPage } from "../controllers/edit.js";
 import { deleteAd } from "../controllers/delete.js";
 import { getAds } from "../controllers/getAds.js";
+import { handleIncrement } from "../controllers/handle-increment.js";
 
 const router = express.Router();
 
@@ -43,10 +43,9 @@ router.get("/edit/:id", authorizeUser, getEditPage);
 router.delete("/delete", authorizeUser, deleteAd);
 
 
+// Handle views and clicks
 
-// Analytics
-
-router.get("/analytics", authorizeUser, getAnalyticsPage);
+router.get("/handle-increment", handleIncrement);
 
 
 export default router
