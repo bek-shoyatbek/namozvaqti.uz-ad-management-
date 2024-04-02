@@ -77,8 +77,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    const headerAd = document.getElementById("header_" + header._id);
-    const popupLink = document.getElementById("popup-link_" + popup._id);
+    let headerAd;
+    let popupLink;
+
+    if (header) {
+        headerAd = document.getElementById("header_" + header._id);
+    }
+
+    if (popup) {
+        popupLink = document.getElementById("popup-link_" + popup._id);
+    }
     // click on the main ad opens the pop up window
     headerAd && headerAd.addEventListener("click", async () => {
         await handleIncrement(header._id, "clicked");
