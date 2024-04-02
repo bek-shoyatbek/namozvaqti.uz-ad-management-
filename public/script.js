@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const popupTimer = localStorage.getItem("popupShown");
 
     const body = document.querySelector("body");
-    const adHeader = document.getElementById("rek_header");
+    const adHeader = document.getElementById("ads");
 
     const ads = await getAds();
 
