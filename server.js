@@ -6,6 +6,7 @@ import http from "http";
 import morgan from "morgan";
 
 import { config } from "dotenv";
+import favicon from "serve-favicon"
 
 
 // import path from "path";
@@ -21,6 +22,9 @@ config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("./public"));
+app.use(favicon("./public/favicon-icon.png"));
+
+
 
 app.use(cors({
   origin: '*'
