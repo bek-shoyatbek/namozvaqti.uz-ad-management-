@@ -151,7 +151,7 @@
           );
 
           localStorage.setItem("token", res.data.token);
-          window.location.href = "/home?token=" + res.data.token;
+          window.location.href = "/?token=" + res.data.token;
         } catch (err) {
           Swal.fire("Error", err.response.data.message, "error");
           console.error(err.response);

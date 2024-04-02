@@ -14,6 +14,7 @@ import authenticateToken from "../middlewares/authorization.js";
 
 const router = express.Router();
 
+router.get("/", authenticateToken, getHome);
 
 // Authorization
 router.get("/login", getLogin);
@@ -21,7 +22,6 @@ router.get("/login", getLogin);
 router.post("/login", login);
 
 // Home
-router.get("/home", authenticateToken, getHome);
 
 
 // Add 

@@ -49,7 +49,7 @@
   const tokenNav = localStorage.getItem("token");
 
   document.getElementById("home").addEventListener("click", () => {
-    window.location.href = "/home?token=" + tokenNav;
+    window.location.href = "/?token=" + tokenNav;
   });
   document.getElementById("add").addEventListener("click", () => {
     window.location.href = "/add?token=" + tokenNav;
