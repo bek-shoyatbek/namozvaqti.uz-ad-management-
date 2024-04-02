@@ -1,4 +1,4 @@
-const API = "https://begi.uz";
+const AD_API = "https://begi.uz";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -11,9 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const ads = await getAds();
 
-    if (ads.length == 0) {
-        body.removeChild(adHeader);
-    }
     let header;
     let popup;
     ads.forEach((e) => {
@@ -24,49 +21,59 @@ document.addEventListener("DOMContentLoaded", async () => {
             popup = e;
         }
     });
-
+    if (!header) {
+        body.removeChild(adHeader);
+    }
 
     if (header) {
         const result = await handleIncrement(header._id, "seen");
-        console.log(result);
     }
     // Show the popup only once per day and not when it was already shown before
     if (popup && !popupTimer) {
         const result = await handleIncrement(popup._id, "seen");
-        console.log(result);
     }
 
     console.log('Header ', header);
     console.log('Popup ', popup);
 
-    const headerHtml = `
-    <a href="${header.link}" id="header_${header._id}"  target="_blank">
-    <div id="ad_text">
-    <h2>${header.name}</h2>
-    </div>
-    <img src="${API + "/images/" + header.image}" id="yandex_ad">
-    </a>  
-    `;
+    if (header) {
+        const headerHtml = `
+        <a href="${header.link}" id="header_${header._id}" target="_blank">
+        <div id="ad_text">
+        <h2>${header.name}</h2>
+        </div>
+        <img src="${AD_API + "/images/" + header.image}" id="ads_img">
+        </a>  
+        `;
 
-    adHeader.innerHTML = headerHtml;
+        adHeader.innerHTML = headerHtml;
+    }
 
-    const popupHtml = `
-        <a href="${popup.link}" id="popup-link_${popup._id}" style="width:90%;height:90%;" target="_blank">
-          <img style="width:90%;height:90%;" src="${API + "/images/" + popup.image
-        }">
-             <h1>${popup.name}</h1>
+
+    if (popup) {
+
+        const popupHtml = `
+        <a href="${popup.link}" id="popup-link_${popup._id}" style="max-width:100%;height:auto;" target="_blank">
+          <img style="max-width:100%;height:auto;" src="${AD_API + "/images/" + popup.image
+            }">
+             <h1 class="popup_text">${popup.name}</h1>
         </a>
       `;
 
-    if (popupTimer !== today.toString()) {
-        localStorage.setItem("popupShown", today.toString());
-        swal.fire({
-            html: popupHtml,
-            allowOutsideClick: false,
-            cancelButtonText: "Yopish",
-            showCancelButton: true,
-            showConfirmButton: false,
-        });
+        if (popupTimer !== today.toString()) {
+            localStorage.setItem("popupShown", today.toString());
+            swal.fire({
+                html: popupHtml,
+                customClass: {
+                    popup: "transparent-popup",
+                },
+                allowOutsideClick: false,
+                cancelButtonText: "Yopish",
+                timer: 7000,
+                showCancelButton: true,
+                showConfirmButton: false,
+            });
+        }
     }
 
 
@@ -83,13 +90,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 
+function closeModal() {
+    popper.style.display = "none";
+}
+
 
 // functions
 
 async function handleIncrement(id, prop) {
     try {
         const response = await axios.get(
-            `${API}/handle-increment?id=${id}&prop=${prop}`
+            `${AD_API}/killer/handle-increment?id=${id}&prop=${prop}`
         );
 
         return response.data;
@@ -100,7 +111,7 @@ async function handleIncrement(id, prop) {
 
 async function getAds() {
     try {
-        const ads = await axios.get(API + "/get-ads");
+        const ads = await axios.get(AD_API + "/killer/get-ads");
 
         return ads.data;
     } catch (err) {
