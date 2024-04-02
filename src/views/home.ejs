@@ -8,11 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
-  <link
-  rel="icon"
-  type="image/x-icon"
-  href="/favicon-icon.png"
-/>
+  <link rel="icon" type="image/x-icon" href="/favicon-icon.png" />
 </head>
 <style>
   main {
@@ -140,28 +136,44 @@
     const buttons = document.querySelectorAll(".btn");
     const actives = document.querySelectorAll("#active");
 
+    const tokenHome = localStorage.getItem("token");
+
+    if (!tokenHome) {
+      Swal.fire("Error", "Please login first", "error");
+      window.location.href = "/login";
+    }
+
     buttons.forEach((button) => {
       button.addEventListener("click", async (event) => {
+        event.preventDefault();
         try {
           const id = event.target.id.split("_")[1];
           const action = event.target.id.split("_")[0];
           const status = action == "deselect" ? false : true;
-          console.log(action)
+
           switch (action) {
             case "deselect":
-              const response = await axios.put(`/active?id=${id}&active=${status}`);
+              const response = await axios.put(`/active?id=${id}&active=${status}`, null, {
+                headers: {
+                  authorization: tokenHome,
+                },
+              });
               if (response.status === 200) {
-                window.location.reload();
+                window.location.href = "/home?token=" + tokenHome;;
               }
               break;
             case "select":
-              const res = await axios.put(`/active?id=${id}&active=${status}`);
+              const res = await axios.put(`/active?id=${id}&active=${status}`, null, {
+                headers: {
+                  authorization: tokenHome,
+                },
+              });
               if (res.status === 200) {
-                window.location.reload();
+                window.location.href = "/home?token=" + tokenHome;
               }
               break;
             case "edit":
-              window.location.href = "/edit/" + id;
+              window.location.href = "/edit/" + id + "?token=" + tokenHome;
               break;
             case "delete":
               Swal.fire({
@@ -174,7 +186,11 @@
                 confirmButtonText: "Yes, delete it!"
               }).then(async (result) => {
                 if (result.isConfirmed) {
-                  await axios.delete(`/delete?id=${id}`)
+                  await axios.delete(`/delete?id=${id}`, {
+                    headers: {
+                      authorization: tokenHome,
+                    },
+                  })
                   Swal.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",

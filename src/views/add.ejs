@@ -3,6 +3,7 @@
   <head>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
   </head>
   <style>
     .form-container {
@@ -61,12 +62,7 @@
     <div class="form-container">
       <h1>Add Product</h1>
 
-      <form
-        action="/add"
-        method="post"
-        enctype="multipart/form-data"
-        id="myForm"
-      >
+      <form enctype="multipart/form-data" id="myForm">
         <div class="form-group">
           <label for="name">Name:</label>
           <input type="text" id="name" name="name" required />
@@ -97,8 +93,13 @@
       // Get form element
       const form = document.getElementById("myForm");
 
+      const tokenAdd = localStorage.getItem("token");
+      if (!tokenAdd) {
+        window.location.href = "/login";
+      }
+
       // Add submit event listener
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
         // Prevent default submit
         e.preventDefault();
 
@@ -106,26 +107,34 @@
         const formData = new FormData(form);
 
         // AJAX request to submit data
-        fetch("/add", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => {
-            console.log(response);
-            // Handle response
-            Swal.fire({
-              position: "top-center",
-              icon: "success",
-              title: "Your work has been saved",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            // Clear form
-            form.reset();
-          })
-          .catch((error) => {
-            console.error(error.response);
+        const response = await axios.post("/add", formData, {
+          headers: {
+            authorization: tokenAdd,
+          },
+        });
+
+        if (response.data.error) {
+          // Handle error
+          Swal.fire({
+            position: "top-center",
+            icon: "error",
+            title: response.data.error,
+            showConfirmButton: false,
+            timer: 1500,
           });
+          return;
+        }
+
+        // Handle response
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        // Clear form
+        form.reset();
       });
     </script>
   </body>

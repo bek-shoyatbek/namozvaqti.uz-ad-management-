@@ -8,5 +8,6 @@ export default {
     sessionSecret: process.env.SESSION_SECRET,
     adminLogin: process.env.ADMIN_LOGIN,
     adminPassword: process.env.ADMIN_PASS,
-    appRootPath: appRootPath.path
+    appRootPath: appRootPath.path,
+    jwtSecret: process.env.JWT_SECRET
 }

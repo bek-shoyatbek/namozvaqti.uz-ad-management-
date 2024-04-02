@@ -17,7 +17,8 @@ export const add = async (req, res, next) => {
             image,
             location
         });
-        await newAd.save();
+        const savedAd = await newAd.save();
+        console.log("saved ", savedAd);
         res.status(200).send({ message: "Uploaded successfully" });
         return;
     } catch (err) {

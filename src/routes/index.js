@@ -10,6 +10,7 @@ import { editAd, getEditPage } from "../controllers/edit.js";
 import { deleteAd } from "../controllers/delete.js";
 import { getAds } from "../controllers/getAds.js";
 import { handleIncrement } from "../controllers/handle-increment.js";
+import authenticateToken from "../middlewares/authorization.js";
 
 const router = express.Router();
 
@@ -20,31 +21,31 @@ router.get("/login", getLogin);
 router.post("/login", login);
 
 // Home
-router.get("/home", getHome);
+router.get("/home", authenticateToken, getHome);
 
 
 // Add 
-router.get("/add", getAddPage);
+router.get("/add", authenticateToken, getAddPage);
 
 
-router.get("/get-ads", getAds);
+router.get("/get-ads", authenticateToken, getAds);
 
-router.post("/add", upload.single("image"), add);
+router.post("/add", authenticateToken, upload.single("image"), add);
 
 // Edit 
 
-router.put("/active", setActiveAd);
+router.put("/active", authenticateToken, setActiveAd);
 
-router.post("/update/:id", upload.single("image"), editAd);
+router.post("/update/:id", authenticateToken, upload.single("image"), editAd);
 
-router.get("/edit/:id", getEditPage);
+router.get("/edit/:id", authenticateToken, getEditPage);
 
-router.delete("/delete", deleteAd);
+router.delete("/delete", authenticateToken, deleteAd);
 
 
 // Handle views and clicks
 
-router.get("/handle-increment", handleIncrement);
+router.get("/handle-increment", authenticateToken, handleIncrement);
 
 
 export default router
