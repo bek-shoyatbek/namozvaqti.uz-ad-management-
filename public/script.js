@@ -1,4 +1,4 @@
-const API = "https://kolesso.uz/namozvaqti";
+const API = "https://begi.uz";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
