@@ -100,7 +100,7 @@ function closeModal() {
 async function handleIncrement(id, prop) {
     try {
         const response = await axios.get(
-            `${AD_API}/killer/handle-increment?id=${id}&prop=${prop}`
+            `${AD_API}/handle-increment?id=${id}&prop=${prop}`
         );
 
         return response.data;
@@ -111,7 +111,7 @@ async function handleIncrement(id, prop) {
 
 async function getAds() {
     try {
-        const ads = await axios.get(AD_API + "/killer/get-ads");
+        const ads = await axios.get(AD_API + "/get-ads");
 
         return ads.data;
     } catch (err) {
