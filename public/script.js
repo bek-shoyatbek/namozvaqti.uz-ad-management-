@@ -16,14 +16,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let header;
     let popup;
-    ads && ads.forEach((e) => {
-        if (e.location == "header") {
-            header = e;
-        }
-        if (e.location == "popup") {
-            popup = e;
-        }
-    });
+    if (ads?.length > 0) {
+        ads.forEach((e) => {
+            if (e.location == "header") {
+                header = e;
+            }
+            if (e.location == "popup") {
+                popup = e;
+            }
+        });
+    }
     if (!header) {
         body.removeChild(adHeader);
     }
