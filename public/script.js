@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let header;
     let popup;
-    ads.forEach((e) => {
+    ads && ads.forEach((e) => {
         if (e.location == "header") {
             header = e;
         }
