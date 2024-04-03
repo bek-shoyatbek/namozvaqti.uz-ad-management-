@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const ads = await getAds();
 
+
+    console.log("Ads ", ads);
+
     let header;
     let popup;
     ads.forEach((e) => {
