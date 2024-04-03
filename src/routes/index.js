@@ -27,8 +27,7 @@ router.post("/login", login);
 // Add 
 router.get("/add", authenticateToken, getAddPage);
 
-
-router.get("/get-ads", authenticateToken, getAds);
+router.get("/get-ads", getAds);
 
 router.post("/add", authenticateToken, upload.single("image"), add);
 
@@ -45,7 +44,7 @@ router.delete("/delete", authenticateToken, deleteAd);
 
 // Handle views and clicks
 
-router.get("/handle-increment", authenticateToken, handleIncrement);
+router.get("/handle-increment", handleIncrement);
 
 
 export default router
