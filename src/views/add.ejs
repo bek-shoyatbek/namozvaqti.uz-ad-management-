@@ -1,3 +1,5 @@
+<!-- @format -->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -55,39 +57,45 @@
         width: 600px;
       }
     }
+
+    .box{
+      padding-top: 30px;
+    }
   </style>
 
   <body>
     <%- include("navbar") %>
-    <div class="form-container">
-      <h1>Add Product</h1>
+    <div class="box">
+      <div class="form-container">
+        <h1>Add Product</h1>
 
-      <form enctype="multipart/form-data" id="myForm">
-        <div class="form-group">
-          <label for="name">Name:</label>
-          <input type="text" id="name" name="name" required />
-        </div>
+        <form enctype="multipart/form-data" id="myForm">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+          </div>
 
-        <div class="form-group">
-          <label for="link">Link:</label>
-          <input type="text" id="link" name="link" required />
-        </div>
+          <div class="form-group">
+            <label for="link">Link:</label>
+            <input type="text" id="link" name="link" required />
+          </div>
 
-        <div class="form-group">
-          <label for="image">Image:</label>
-          <input type="file" id="image" name="image" required />
-        </div>
+          <div class="form-group">
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image" required />
+          </div>
 
-        <div class="form-group">
-          <label for="location">Location:</label>
-          <select id="location" name="location">
-            <option value="header">Header</option>
-            <option value="popup">Popup</option>
-          </select>
-        </div>
+          <div class="form-group">
+            <label for="location">Location:</label>
+            <select id="location" name="location">
+              <option value="header">Header</option>
+              <option value="popup">Popup</option>
+            </select>
+          </div>
 
-        <button type="submit">Submit</button>
-      </form>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
     <script>
       // Get form element

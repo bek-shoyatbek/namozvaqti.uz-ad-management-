@@ -1,48 +1,73 @@
+<!-- @format -->
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    color: #333;
-    line-height: 1.5;
-    margin: 0;
-    padding: 0;
+  * {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
   }
-  header {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    margin-bottom: 2%;
+  #sidebar {
+    position: fixed;
+    width: 200px;
+    height: 100%;
+    background: #151719;
+    left: -200px;
+    transition: all 500ms linear;
+    padding-top: 50px;
   }
-
-  header a {
-    color: #fff;
-    text-decoration: none;
-    margin-right: 20px;
+  #sidebar.active {
+    left: 0px;
   }
-  nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  #sidebar ul li {
+    color: rgba(230, 230, 230, 0.9);
+    list-style: none;
+    padding: 15px 10px;
+    border-bottom: 1px solid rgba(100, 100, 100, 0.3);
+    cursor: pointer;
   }
-
-  nav a {
-    padding: 10px;
-    text-decoration: none;
-    color: #f3f3f3;
+  #sidebar ul li:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: blue;
   }
 
-  nav a:hover {
-    background-color: #110f0f;
+  #sidebar .toggle-btn {
+    position: absolute;
+    left: 210px;
+    top: 20px;
+  }
+  #sidebar .toggle-btn span {
+    display: block;
+    width: 30px;
+    height: 5px;
+    background: #151719;
+    margin: 5px 0px;
+  }
+
+  .font-style {
+    margin: 20px 10px;
+  }
+  h1 {
+    color: black;
   }
 </style>
 
 <header>
-  <nav>
-    <a id="home">Home</a>
-    <a id="add">Add new</a>
-  </nav>
+  <div id="sidebar">
+    <div class="toggle-btn" onclick="toggleSidebar()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <ul id="nav">
+      <li id="home">Home</li>
+      <li id="add">Add new</li>
+      <li id="analytics">Analytics</li>
+    </ul>
+  </div>
 </header>
 
 <script>
@@ -54,4 +79,8 @@
   document.getElementById("add").addEventListener("click", () => {
     window.location.href = "/add?token=" + tokenNav;
   });
+
+  function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("active");
+  }
 </script>
