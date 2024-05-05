@@ -17,29 +17,19 @@ const adSchema = new Schema({
         required: true
     },
 
-    clicks: [
-        {
-            day: {
-                type: String
-            },
-            count: {
-                type: Number,
-                default: 0
-            }
+    clicks: {
+        day: {
+            type: Array,
+            default: []
         }
-    ],
+    },
 
-    views: [
-        {
-            day: {
-                type: String
-            },
-            count: {
-                type: Number,
-                default: 0
-            }
+    views: {
+        day: {
+            type: Array,
+            default: []
         }
-    ],
+    },
     active: {
         type: Boolean,
         default: false,
