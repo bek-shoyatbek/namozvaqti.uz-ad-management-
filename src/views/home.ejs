@@ -1,5 +1,3 @@
-<!-- @format -->
-
 <!DOCTYPE html>
 <html>
 
@@ -31,8 +29,13 @@
     margin: 10px;
     width: 300px;
     position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
   }
 
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
 
   .card img {
     max-width: 100%;
@@ -58,30 +61,26 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: absolute;
-    right: 20px;
-    margin-right: 2%;
-    top: 25px;
-    display: none;
-  }
-
-  .card:hover .actions {
-    display: block;
+    margin-top: 10px;
   }
 
   .card .actions button {
     border: none;
-    border-radius: 5%;
-    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
     cursor: pointer;
-    font-size: larger;
-    color: #090909;
-    margin: 0 5px;
+    transition: background-color 0.3s ease;
   }
 
   .card .actions button:hover {
-    background-color: #373030;
-    color: #ddd;
+    background-color: #555;
   }
 
   .overlay-text {
@@ -105,7 +104,7 @@
       <% ads.forEach(function(ad) { %>
       <li class="card">
         <div class="image_container">
-          <img src="https://begi.uz/images/<%= ad.image %>" alt="Ad image" />
+          <img src="http://localhost:2000/images/<%= ad.image %>" alt="Ad image" /> 
           <% if (ad.active) { %>
           <div class="overlay-text" id="active">Active</div>
           <% } %>

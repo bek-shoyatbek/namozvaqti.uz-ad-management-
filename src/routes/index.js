@@ -1,6 +1,5 @@
 import express from "express";
 
-
 import { getLogin, login } from "../controllers/login.js";
 import { getHome } from "../controllers/home.js";
 import { add, getAddPage } from "../controllers/add.js";
@@ -11,6 +10,7 @@ import { deleteAd } from "../controllers/delete.js";
 import { getAds } from "../controllers/getAds.js";
 import { handleIncrement } from "../controllers/handle-increment.js";
 import authenticateToken from "../middlewares/authorization.js";
+import { getAnalytics } from "../controllers/analytics.controller.js";
 
 const router = express.Router();
 
@@ -23,15 +23,14 @@ router.post("/login", login);
 
 // Home
 
-
-// Add 
+// Add
 router.get("/add", authenticateToken, getAddPage);
 
 router.get("/get-ads", getAds);
 
 router.post("/add", authenticateToken, upload.single("image"), add);
 
-// Edit 
+// Edit
 
 router.put("/active", authenticateToken, setActiveAd);
 
@@ -41,10 +40,11 @@ router.get("/edit/:id", authenticateToken, getEditPage);
 
 router.delete("/delete", authenticateToken, deleteAd);
 
-
 // Handle views and clicks
 
 router.get("/handle-increment", handleIncrement);
 
+// Analytics
+router.get("/analytics", authenticateToken, getAnalytics);
 
-export default router
+export default router;

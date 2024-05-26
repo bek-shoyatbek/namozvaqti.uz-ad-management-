@@ -1,48 +1,45 @@
 const AD_API = "https://begi.uz";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  let today = new Date().getDay();
+  const popupTimer = localStorage.getItem("popupShown");
 
+  const body = document.querySelector("body");
+  const adHeader = document.getElementById("ads");
 
-    let today = new Date().getDate();
-    const popupTimer = localStorage.getItem("popupShown");
+  const ads = await getAds();
 
-    const body = document.querySelector("body");
-    const adHeader = document.getElementById("ads");
+  console.log("Ads ", ads);
 
-    const ads = await getAds();
+  let header;
+  let popup;
+  if (ads?.length > 0) {
+    ads.forEach((e) => {
+      if (e.location == "header") {
+        header = e;
+      }
+      if (e.location == "popup") {
+        popup = e;
+      }
+    });
+  }
+  if (!header) {
+    body.removeChild(adHeader);
+  }
 
+  if (header) {
+    const result = await handleIncrement(header._id, "seen");
+  }
+  // Show the popup only once per day and not when it was already shown before
+  if (popup && !popupTimer) {
+    const result = await handleIncrement(popup._id, "seen");
+  }
 
-    console.log("Ads ", ads);
+  console.log("Header ", header);
+  console.log("Popup ", popup);
 
-    let header;
-    let popup;
-    if (ads?.length > 0) {
-        ads.forEach((e) => {
-            if (e.location == "header") {
-                header = e;
-            }
-            if (e.location == "popup") {
-                popup = e;
-            }
-        });
-    }
-    if (!header) {
-        body.removeChild(adHeader);
-    }
-
-    if (header) {
-        const result = await handleIncrement(header._id, "seen");
-    }
-    // Show the popup only once per day and not when it was already shown before
-    if (popup && !popupTimer) {
-        const result = await handleIncrement(popup._id, "seen");
-    }
-
-    console.log('Header ', header);
-    console.log('Popup ', popup);
-
-    if (header) {
-        const headerHtml = `
+  if (header) {
+    const headerHtml = `
         <a href="${header.link}" id="header_${header._id}" target="_blank">
         <div id="ad_text">
         <h2>${header.name}</h2>
@@ -51,83 +48,83 @@ document.addEventListener("DOMContentLoaded", async () => {
         </a>  
         `;
 
-        adHeader.innerHTML = headerHtml;
-    }
+    adHeader.innerHTML = headerHtml;
+  }
 
-
-    if (popup) {
-
-        const popupHtml = `
-        <a href="${popup.link}" id="popup-link_${popup._id}" style="max-width:100%;height:auto;" target="_blank">
-          <img style="max-width:100%;height:auto;" src="${AD_API + "/images/" + popup.image
-            }">
+  if (popup) {
+    const popupHtml = `
+        <a href="${popup.link}" id="popup-link_${
+      popup._id
+    }" style="max-width:100%;height:auto;" target="_blank">
+          <img style="max-width:100%;height:auto;" src="${
+            AD_API + "/images/" + popup.image
+          }">
              <h1 class="popup_text">${popup.name}</h1>
         </a>
       `;
 
-        if (popupTimer !== today.toString()) {
-            localStorage.setItem("popupShown", today.toString());
-            swal.fire({
-                html: popupHtml,
-                customClass: {
-                    popup: "transparent-popup",
-                },
-                allowOutsideClick: false,
-                cancelButtonText: "Yopish",
-                timer: 7000,
-                showCancelButton: true,
-                showConfirmButton: false,
-            });
-        }
+    if (popupTimer !== today.toString()) {
+      localStorage.setItem("popupShown", today.toString());
+      swal.fire({
+        html: popupHtml,
+        customClass: {
+          popup: "transparent-popup",
+        },
+        allowOutsideClick: false,
+        cancelButtonText: "Yopish",
+        timer: 7000,
+        showCancelButton: true,
+        showConfirmButton: false,
+      });
     }
+  }
 
+  let headerAd;
+  let popupLink;
 
-    let headerAd;
-    let popupLink;
+  if (header) {
+    headerAd = document.getElementById("header_" + header._id);
+  }
 
-    if (header) {
-        headerAd = document.getElementById("header_" + header._id);
-    }
-
-    if (popup) {
-        popupLink = document.getElementById("popup-link_" + popup._id);
-    }
-    // click on the main ad opens the pop up window
-    headerAd && headerAd.addEventListener("click", async () => {
-        await handleIncrement(header._id, "clicked");
+  if (popup) {
+    popupLink = document.getElementById("popup-link_" + popup._id);
+  }
+  // click on the main ad opens the pop up window
+  headerAd &&
+    headerAd.addEventListener("click", async () => {
+      await handleIncrement(header._id, "clicked");
     });
-    // clicking on the button in the pop up closes it and shows another random advertis
-    popupLink && popupLink.addEventListener("click", async () => {
-        await handleIncrement(popup._id, "clicked");
+  // clicking on the button in the pop up closes it and shows another random advertis
+  popupLink &&
+    popupLink.addEventListener("click", async () => {
+      await handleIncrement(popup._id, "clicked");
     });
-
 });
 
 function closeModal() {
-    popper.style.display = "none";
+  popper.style.display = "none";
 }
-
 
 // functions
 
 async function handleIncrement(id, prop) {
-    try {
-        const response = await axios.get(
-            `${AD_API}/handle-increment?id=${id}&prop=${prop}`
-        );
+  try {
+    const response = await axios.get(
+      `${AD_API}/handle-increment?id=${id}&prop=${prop}`
+    );
 
-        return response.data;
-    } catch (err) {
-        console.error(err);
-    }
+    return response.data;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 async function getAds() {
-    try {
-        const ads = await axios.get(AD_API + "/get-ads");
+  try {
+    const ads = await axios.get(AD_API + "/get-ads");
 
-        return ads.data;
-    } catch (err) {
-        console.error(err);
-    }
+    return ads.data;
+  } catch (err) {
+    console.error(err);
+  }
 }
