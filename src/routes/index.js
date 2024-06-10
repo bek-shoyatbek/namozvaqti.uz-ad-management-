@@ -45,6 +45,6 @@ router.delete("/delete", authenticateToken, deleteAd);
 router.get("/handle-increment", handleIncrement);
 
 // Analytics
-router.get("/analytics", authenticateToken, getAnalytics);
+router.get("/analytics/:adId", getAnalytics);
 
 export default router;

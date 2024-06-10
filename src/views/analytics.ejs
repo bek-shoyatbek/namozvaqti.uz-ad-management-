@@ -3,6 +3,7 @@
   <head>
     <title>Ad Analytics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
   <style>
     body {
@@ -11,13 +12,11 @@
       padding: 20px;
       background-color: #f5f5f5;
     }
-
     h1,
     h2 {
       color: #333;
       text-align: center;
     }
-
     .chart-container {
       position: relative;
       width: 100%;
@@ -29,7 +28,6 @@
       background-color: #fff;
       border-radius: 5px;
     }
-
     .chart-container canvas {
       position: absolute;
       top: 0;
@@ -43,25 +41,38 @@
   <body>
     <%- include("navbar") %>
     <h1>Ad Analytics</h1>
-
     <h2>Overall Clicks and Views</h2>
     <div class="chart-container">
       <canvas id="dailyChart"></canvas>
     </div>
-
+    <div class="chart-container">
+      <canvas id="monthlyChart"></canvas>
+    </div>
     <script>
+      const API_URL = "https://z73fb93d-2000.euw.devtunnels.ms";
+      const path = window.location.pathname.split("/");
+      const adId = path[path.length - 1];
+       axios.get()
+      // Retrieve ad data from the server
+      // const adData = "<%- JSON.stringify(ad) %>";
+
+      console.log(adData);
+
       // Daily Chart
-      const dailyClicksData = generateFakeClicks(30, 0, 1000); // Generate fake clicks data
-      const dailyViewsData = generateFakeViews(30, 0, 1000); // Generate fake views data
-      console.log("dailyClicksData ", dailyClicksData);
-      console.log("dailyViewsData ", dailyViewsData);
+      const dailyClicksData = adData.dailyClicksViews
+        .map((doc) => doc.clicks.length)
+        .reverse();
+      const dailyViewsData = adData.dailyClicksViews
+        .map((doc) => doc.views.length)
+        .reverse();
+      const dailyDates = adData.dailyClicksViews
+        .map((doc) => doc.date.toLocaleDateString())
+        .reverse();
+
       const dailyChart = new Chart(document.getElementById("dailyChart"), {
         type: "line",
         data: {
-          labels: Array.from(
-            { length: dailyClicksData.length },
-            (_, i) => `Day ${i + 1}`
-          ),
+          labels: dailyDates,
           datasets: [
             {
               label: "Clicks",
@@ -88,23 +99,46 @@
         },
       });
 
-      // Monthly and Yearly charts (similar to daily chart)
+      // Monthly Chart
+      const monthlyClicksData = adData.monthlyClicksViews.map(
+        (doc) => doc.clicks.length
+      );
+      const monthlyViewsData = adData.monthlyClicksViews.map(
+        (doc) => doc.views.length
+      );
+      const monthlyDates = adData.monthlyClicksViews.map((doc) =>
+        doc.date.toLocaleDateString()
+      );
 
-      // Helper function to generate fake clicks
-      function generateFakeClicks(length, min, max) {
-        return Array.from(
-          { length },
-          () => Math.floor(Math.random() * (max - min + 1)) + min
-        );
-      }
-
-      // Helper function to generate fake views
-      function generateFakeViews(length, min, max) {
-        return Array.from(
-          { length },
-          () => Math.floor(Math.random() * (max - min + 1)) + min
-        );
-      }
+      const monthlyChart = new Chart(document.getElementById("monthlyChart"), {
+        type: "line",
+        data: {
+          labels: monthlyDates,
+          datasets: [
+            {
+              label: "Clicks",
+              data: monthlyClicksData,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+            },
+            {
+              label: "Views",
+              data: monthlyViewsData,
+              backgroundColor: "rgba(54, 162, 235, 0.2)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
     </script>
   </body>
 </html>

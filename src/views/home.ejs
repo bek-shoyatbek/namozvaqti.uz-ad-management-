@@ -31,11 +31,28 @@
     position: relative;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
+    position: relative;
   }
 
   .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
+
+  .card:hover .reference-btn {
+  display: block;
+}
+
+.reference-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 50%;
+  text-decoration: none;
+}
 
   .card img {
     max-width: 100%;
@@ -102,31 +119,32 @@
   <main>
     <ul class="cards">
       <% ads.forEach(function(ad) { %>
-      <li class="card">
-        <div class="image_container">
-          <img src="http://localhost:2000/images/<%= ad.image %>" alt="Ad image" /> 
-          <% if (ad.active) { %>
-          <div class="overlay-text" id="active">Active</div>
-          <% } %>
-        </div>
-        <div class="items">
-          <h3>
-            <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer">link <i class="fa-solid fa-arrow-right"> </i></a>
-          </h3>
-          <h3>| <%= ad.location %> |</h3>
-          <p><i class="fa-regular fa-eye"></i> <%= ad.seen %> </p>
-          <p><i class="fa-solid fa-circle-play"></i> <%= ad.clicked %></p>
-        </div>
-        <div class="actions">
-          <% if(!ad.active) { %>
-          <button class="select btn" id="select_<%= ad._id %>">Select</button>
-          <% } else { %>
-          <button class="select btn" id="deselect_<%= ad._id %>">Deselect</button>
-          <% } %>
-          <button class="edit btn" id="edit_<%= ad._id %>">Edit</button>
-          <button class="delete btn" id="delete_<%= ad._id %>">Delete</button>
-        </div>
-      </li>
+        <li class="card">
+          <div class="image_container">
+            <img src="http://localhost:2000/images/<%= ad.image %>" alt="Ad image" />
+            <% if (ad.active) { %>
+            <div class="overlay-text" id="active">Active</div>
+            <% } %>
+          </div>
+          <div class="items">
+            <h3>
+              <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer">link <i class="fa-solid fa-arrow-right"> </i></a>
+            </h3>
+            <h3>| <%= ad.location %> |</h3>
+          </div>
+          <div class="actions">
+            <% if(!ad.active) { %>
+            <button class="select btn" id="select_<%= ad._id %>">Select</button>
+            <% } else { %>
+            <button class="select btn" id="deselect_<%= ad._id %>">Deselect</button>
+            <% } %>
+            <button class="edit btn" id="edit_<%= ad._id %>">Edit</button>
+            <button class="delete btn" id="delete_<%= ad._id %>">Delete</button>
+          </div>
+          <a href="/analytics/<%= ad._id %>" class="reference-btn" title="View Analytics">
+            <i class="fa-solid fa-chart-line"></i>
+          </a>
+        </li>
       </div>
       <% }) %>
     </ul>

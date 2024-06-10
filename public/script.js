@@ -1,4 +1,12 @@
-const AD_API = "https://begi.uz";
+// const AD_API = "https://begi.uz";
+const AD_API = "https://z73fb93d-2000.euw.devtunnels.ms";
+
+let userId = localStorage.getItem("userId");
+
+if (!userId) {
+  userId = generateUUID();
+  localStorage.setItem("userId", userId);
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   let today = new Date().getDay();
@@ -9,10 +17,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const ads = await getAds();
 
-  console.log("Ads ", ads);
-
   let header;
   let popup;
+
   if (ads?.length > 0) {
     ads.forEach((e) => {
       if (e.location == "header") {
@@ -28,11 +35,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (header) {
-    const result = await handleIncrement(header._id, "seen");
+    await handleIncrement(header._id, "view");
   }
   // Show the popup only once per day and not when it was already shown before
   if (popup && !popupTimer) {
-    const result = await handleIncrement(popup._id, "seen");
+    await handleIncrement(popup._id, "view");
   }
 
   console.log("Header ", header);
@@ -92,12 +99,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // click on the main ad opens the pop up window
   headerAd &&
     headerAd.addEventListener("click", async () => {
-      await handleIncrement(header._id, "clicked");
+      await handleIncrement(header._id, "click");
     });
   // clicking on the button in the pop up closes it and shows another random advertis
   popupLink &&
     popupLink.addEventListener("click", async () => {
-      await handleIncrement(popup._id, "clicked");
+      await handleIncrement(popup._id, "click");
     });
 });
 
@@ -110,7 +117,7 @@ function closeModal() {
 async function handleIncrement(id, prop) {
   try {
     const response = await axios.get(
-      `${AD_API}/handle-increment?id=${id}&prop=${prop}`
+      `${AD_API}/handle-increment?id=${id}&prop=${prop}&userId=${userId}`
     );
 
     return response.data;
@@ -127,4 +134,16 @@ async function getAds() {
   } catch (err) {
     console.error(err);
   }
+}
+
+function generateUUID() {
+  let uuid = "";
+  for (let i = 0; i < 32; i++) {
+    const random = (Math.random() * 16) | 0;
+    if (i === 8 || i === 12 || i === 16 || i === 20) {
+      uuid += "-";
+    }
+    uuid += (i === 12 ? 4 : i === 16 ? (random & 3) | 8 : random).toString(16);
+  }
+  return uuid;
 }
