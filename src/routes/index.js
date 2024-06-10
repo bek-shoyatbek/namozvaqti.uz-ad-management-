@@ -10,7 +10,10 @@ import { deleteAd } from "../controllers/delete.js";
 import { getAds } from "../controllers/getAds.js";
 import { handleIncrement } from "../controllers/handle-increment.js";
 import authenticateToken from "../middlewares/authorization.js";
-import { getAnalytics } from "../controllers/analytics.controller.js";
+import {
+  getAnalytic,
+  getAnalytics,
+} from "../controllers/analytics.controller.js";
 
 const router = express.Router();
 
@@ -46,5 +49,6 @@ router.get("/handle-increment", handleIncrement);
 
 // Analytics
 router.get("/analytics/:adId", getAnalytics);
+router.get("/analytic/:adId", getAnalytic);
 
 export default router;
