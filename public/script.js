@@ -1,5 +1,5 @@
-// const AD_API = "https://begi.uz";
-const AD_API = "https://z73fb93d-2000.euw.devtunnels.ms";
+const AD_API = "https://begi.uz";
+// const AD_API = "https://z73fb93d-2000.euw.devtunnels.ms";
 
 let userId = localStorage.getItem("userId");
 
@@ -7,6 +7,8 @@ if (!userId) {
   userId = generateUUID();
   localStorage.setItem("userId", userId);
 }
+
+console.log("userId", userId);
 
 document.addEventListener("DOMContentLoaded", async () => {
   let today = new Date().getDay();
@@ -16,6 +18,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adHeader = document.getElementById("ads");
 
   const ads = await getAds();
+
+  console.log("Ads ", ads);
 
   let header;
   let popup;
