@@ -111,6 +111,24 @@
     font-size: 20px;
     text-align: center;
   }
+
+  .card .items {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .card .items .totals {
+    display: flex;
+    gap: 10px;
+  }
+
+  .card .items .totals p {
+    margin: 0;
+    font-size: 0.8em;
+    color: #666;
+  }
 </style>
 
 <body>
@@ -131,6 +149,10 @@
             <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer">link <i class="fa-solid fa-arrow-right"> </i></a>
           </h3>
           <h3>| <%= ad.location %> |</h3>
+          <div class="totals">
+            <p>Views: <%= ad.totalViews %></p>
+            <p>Clicks: <%= ad.totalClicks %></p>
+          </div>
         </div>
         <div class="actions">
           <% if(!ad.active) { %>
@@ -229,19 +251,20 @@
     });
 
     (async () => {
-      const ads = await getAds();
-      const totalViews = getTotalViews({
-        dailyClicksViews: ads[0].dailyClicksViews,
-        monthlyClicksViews: ads[0].monthlyClicksViews
-      });
-      const totalClicks = getTotalClicks({
-        dailyClicksViews: ads[0].dailyClicksViews,
-        monthlyClicksViews: ads[0].monthlyClicksViews
-      });
+      const {
+        ads,
+        totalViews,
+        totalClicks
+      } = await getAds();
 
       // Create a new element to display the totals
       const totalsElement = document.createElement('div');
-      totalsElement.innerHTML = `<p>Total Views: ${totalViews}</p><p>Total Clicks: ${totalClicks}</p>`;
+      totalsElement.innerHTML = `
+    <div class="totals">
+      <p>Total Views: ${totalViews}</p>
+      <p>Total Clicks: ${totalClicks}</p>
+    </div>
+  `;
 
       // Append the new element to the main element
       const mainElement = document.querySelector('main');
@@ -251,29 +274,46 @@
     async function getAds() {
       try {
         const ads = await axios.get(`${API}/get-ads`);
-        return ads.data;
+        const adsWithTotals = ads.data.map(ad => {
+          const totalViews = getTotalViews(ad.dailyClicksViews, ad.monthlyClicksViews);
+          const totalClicks = getTotalClicks(ad.dailyClicksViews, ad.monthlyClicksViews);
+          return {
+            ...ad,
+            totalViews,
+            totalClicks
+          };
+        });
+
+        const totalViews = adsWithTotals.reduce((sum, ad) => sum + ad.totalViews, 0);
+        const totalClicks = adsWithTotals.reduce((sum, ad) => sum + ad.totalClicks, 0);
+
+        return {
+          ads: adsWithTotals,
+          totalViews,
+          totalClicks
+        };
       } catch (err) {
         console.error(err);
       }
     }
 
-    function getTotalViews(data) {
+    function getTotalViews(dailyClicksViews, monthlyClicksViews) {
       let totalViews = 0;
-      data.dailyClicksViews.forEach(item => {
+      dailyClicksViews.forEach(item => {
         totalViews += item.views.length;
       });
-      data.monthlyClicksViews.forEach(item => {
+      monthlyClicksViews.forEach(item => {
         totalViews += item.views.length;
       });
       return totalViews;
     }
 
-    function getTotalClicks(data) {
+    function getTotalClicks(dailyClicksViews, monthlyClicksViews) {
       let totalClicks = 0;
-      data.dailyClicksViews.forEach(item => {
+      dailyClicksViews.forEach(item => {
         totalClicks += item.clicks.length;
       });
-      data.monthlyClicksViews.forEach(item => {
+      monthlyClicksViews.forEach(item => {
         totalClicks += item.clicks.length;
       });
       return totalClicks;
