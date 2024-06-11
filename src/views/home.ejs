@@ -39,20 +39,20 @@
   }
 
   .card:hover .reference-btn {
-  display: block;
-}
+    display: block;
+  }
 
-.reference-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: none;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 50%;
-  text-decoration: none;
-}
+  .reference-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 50%;
+    text-decoration: none;
+  }
 
   .card img {
     max-width: 100%;
@@ -119,37 +119,39 @@
   <main>
     <ul class="cards">
       <% ads.forEach(function(ad) { %>
-        <li class="card">
-          <div class="image_container">
-            <img src="https://begi.uz/images/<%= ad.image %>" alt="Ad image" />
-            <% if (ad.active) { %>
-            <div class="overlay-text" id="active">Active</div>
-            <% } %>
-          </div>
-          <div class="items">
-            <h3>
-              <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer">link <i class="fa-solid fa-arrow-right"> </i></a>
-            </h3>
-            <h3>| <%= ad.location %> |</h3>
-          </div>
-          <div class="actions">
-            <% if(!ad.active) { %>
-            <button class="select btn" id="select_<%= ad._id %>">Select</button>
-            <% } else { %>
-            <button class="select btn" id="deselect_<%= ad._id %>">Deselect</button>
-            <% } %>
-            <button class="edit btn" id="edit_<%= ad._id %>">Edit</button>
-            <button class="delete btn" id="delete_<%= ad._id %>">Delete</button>
-          </div>
-          <a href="/analytics/<%= ad._id %>" class="reference-btn" title="View Analytics">
-            <i class="fa-solid fa-chart-line"></i>
-          </a>
-        </li>
+      <li class="card">
+        <div class="image_container">
+          <img src="https://begi.uz/images/<%= ad.image %>" alt="Ad image" />
+          <% if (ad.active) { %>
+          <div class="overlay-text" id="active">Active</div>
+          <% } %>
+        </div>
+        <div class="items">
+          <h3>
+            <a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer">link <i class="fa-solid fa-arrow-right"> </i></a>
+          </h3>
+          <h3>| <%= ad.location %> |</h3>
+        </div>
+        <div class="actions">
+          <% if(!ad.active) { %>
+          <button class="select btn" id="select_<%= ad._id %>">Select</button>
+          <% } else { %>
+          <button class="select btn" id="deselect_<%= ad._id %>">Deselect</button>
+          <% } %>
+          <button class="edit btn" id="edit_<%= ad._id %>">Edit</button>
+          <button class="delete btn" id="delete_<%= ad._id %>">Delete</button>
+        </div>
+        <a href="/analytics/<%= ad._id %>" class="reference-btn" title="View Analytics">
+          <i class="fa-solid fa-chart-line"></i>
+        </a>
+      </li>
       </div>
       <% }) %>
     </ul>
   </main>
   <script>
+    const API = 'https://begi.uz';
+
     const buttons = document.querySelectorAll(".btn");
     const actives = document.querySelectorAll("#active");
 
@@ -224,7 +226,58 @@
           console.log(err)
         }
       })
-    })
+    });
+
+    (async () => {
+      const ads = await getAds();
+      const totalViews = getTotalViews({
+        dailyClicksViews: ads[0].dailyClicksViews,
+        monthlyClicksViews: ads[0].monthlyClicksViews
+      });
+      const totalClicks = getTotalClicks({
+        dailyClicksViews: ads[0].dailyClicksViews,
+        monthlyClicksViews: ads[0].monthlyClicksViews
+      });
+
+      // Create a new element to display the totals
+      const totalsElement = document.createElement('div');
+      totalsElement.innerHTML = `<p>Total Views: ${totalViews}</p><p>Total Clicks: ${totalClicks}</p>`;
+
+      // Append the new element to the main element
+      const mainElement = document.querySelector('main');
+      mainElement.appendChild(totalsElement);
+    })();
+
+    async function getAds() {
+      try {
+        const ads = await axios.get(`${API}/get-ads`);
+        return ads.data;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function getTotalViews(data) {
+      let totalViews = 0;
+      data.dailyClicksViews.forEach(item => {
+        totalViews += item.views.length;
+      });
+      data.monthlyClicksViews.forEach(item => {
+        totalViews += item.views.length;
+      });
+      return totalViews;
+    }
+
+    function getTotalClicks(data) {
+      let totalClicks = 0;
+      data.dailyClicksViews.forEach(item => {
+        totalClicks += item.clicks.length;
+      });
+      data.monthlyClicksViews.forEach(item => {
+        totalClicks += item.clicks.length;
+      });
+      return totalClicks;
+    }
   </script>
 </body>
 
