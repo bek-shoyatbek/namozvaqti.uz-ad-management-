@@ -3,6 +3,7 @@ import cors from "cors";
 import expressSession from "express-session";
 import http from "http";
 import morgan from "morgan";
+import path from "path";
 
 import { config } from "dotenv";
 import favicon from "serve-favicon";
