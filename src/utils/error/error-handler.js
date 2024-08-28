@@ -1,6 +1,5 @@
 import { AppError } from "./app-error.js";
 
-
 export function errorHandler(err, req, res) {
   if (err instanceof AppError) {
     return res.status(err.statusCode).send({

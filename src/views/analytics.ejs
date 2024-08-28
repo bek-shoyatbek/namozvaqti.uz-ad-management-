@@ -1,95 +1,136 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Ad Analytics</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
-      integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-  </head>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f5f5f5;
-      margin-top: 18px;
-    }
-    h1,
-    h2 {
-      color: #333;
-      text-align: center;
-    }
-    .chart-container {
-      position: relative;
-      width: 100%;
-      max-width: 1200px;
-      height: 0;
-      padding-bottom: 50%; /* Aspect ratio: 2:1 (height:width) */
-      margin: 20px auto;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      background-color: #fff;
-      border-radius: 5px;
-    }
-    .chart-container canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-  </style>
-  <body>
-    <%- include("navbar") %>
-    <h1>Ad Analytics</h1>
-    <h2>Overall Clicks and Views</h2>
-    <div class="chart-container">
-      <canvas id="dailyChart"></canvas>
-    </div>
-    <div class="chart-container">
-      <canvas id="monthlyChart"></canvas>
-    </div>
-    <script>
-      // const API_URL = "https://z73fb93d-2000.euw.devtunnels.ms";
-      const API_URL = "https://begi.uz";
-      const path = window.location.pathname.split("/");
-      const adId = path[path.length - 1];
-      axios
-        .get(`${API_URL}/analytic/${adId}`)
-        .then((res) => {
-          const adData = res.data?.ad;
-          console.log("ad", adData);
-          // Daily Chart
-          const dailyClicksData = adData.dailyClicksViews
-            .map((doc) => doc.clicks.length)
-            .reverse();
-          const dailyViewsData = adData.dailyClicksViews
-            .map((doc) => doc.views.length)
-            .reverse();
-          const dailyDates = adData.dailyClicksViews
-            .map((doc) => new Date(doc.date).toLocaleDateString())
-            .reverse();
 
-          const dailyChart = new Chart(document.getElementById("dailyChart"), {
+<head>
+  <title>Ad Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    margin-top: 18px;
+  }
+
+  h1,
+  h2 {
+    color: #333;
+    text-align: center;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 0;
+    padding-bottom: 50%;
+    /* Aspect ratio: 2:1 (height:width) */
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 5px;
+  }
+
+  .chart-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+</style>
+
+<body>
+  <%- include("navbar") %>
+  <h1>Ad Analytics</h1>
+  <h2>Overall Clicks and Views</h2>
+  <div class="chart-container">
+    <canvas id="dailyChart"></canvas>
+  </div>
+  <div class="chart-container">
+    <canvas id="monthlyChart"></canvas>
+  </div>
+  <script>
+    // const API_URL = "https://z73fb93d-2000.euw.devtunnels.ms";
+    const API_URL = "https://begi.uz";
+    const path = window.location.pathname.split("/");
+    const adId = path[path.length - 1];
+    axios
+      .get(`${API_URL}/analytic/${adId}`)
+      .then((res) => {
+        const adData = res.data?.ad;
+        console.log("ad", adData);
+        // Daily Chart
+        const dailyClicksData = adData.dailyClicksViews
+          .map((doc) => doc.clicks.length)
+          .reverse();
+        const dailyViewsData = adData.dailyClicksViews
+          .map((doc) => doc.views.length)
+          .reverse();
+        const dailyDates = adData.dailyClicksViews
+          .map((doc) => new Date(doc.date).toLocaleDateString())
+          .reverse();
+
+        const dailyChart = new Chart(document.getElementById("dailyChart"), {
+          type: "line",
+          data: {
+            labels: dailyDates,
+            datasets: [{
+                label: "Clicks",
+                data: dailyClicksData,
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1,
+              },
+              {
+                label: "Views",
+                data: dailyViewsData,
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+
+        // Monthly Chart
+        const monthlyClicksData = adData.monthlyClicksViews.map(
+          (doc) => doc.clicks.length
+        );
+        const monthlyViewsData = adData.monthlyClicksViews.map(
+          (doc) => doc.views.length
+        );
+        const monthlyDates = adData.monthlyClicksViews.map((doc) =>
+          new Date(doc.date).toLocaleDateString()
+        );
+
+        const monthlyChart = new Chart(
+          document.getElementById("monthlyChart"), {
             type: "line",
             data: {
-              labels: dailyDates,
-              datasets: [
-                {
+              labels: monthlyDates,
+              datasets: [{
                   label: "Clicks",
-                  data: dailyClicksData,
+                  data: monthlyClicksData,
                   backgroundColor: "rgba(255, 99, 132, 0.2)",
                   borderColor: "rgba(255, 99, 132, 1)",
                   borderWidth: 1,
                 },
                 {
                   label: "Views",
-                  data: dailyViewsData,
+                  data: monthlyViewsData,
                   backgroundColor: "rgba(54, 162, 235, 0.2)",
                   borderColor: "rgba(54, 162, 235, 1)",
                   borderWidth: 1,
@@ -103,55 +144,13 @@
                 },
               },
             },
-          });
+          }
+        );
+      })
+      .catch((err) => {
+        console.error("err", err);
+      });
+  </script>
+</body>
 
-          // Monthly Chart
-          const monthlyClicksData = adData.monthlyClicksViews.map(
-            (doc) => doc.clicks.length
-          );
-          const monthlyViewsData = adData.monthlyClicksViews.map(
-            (doc) => doc.views.length
-          );
-          const monthlyDates = adData.monthlyClicksViews.map((doc) =>
-            new Date(doc.date).toLocaleDateString()
-          );
-
-          const monthlyChart = new Chart(
-            document.getElementById("monthlyChart"),
-            {
-              type: "line",
-              data: {
-                labels: monthlyDates,
-                datasets: [
-                  {
-                    label: "Clicks",
-                    data: monthlyClicksData,
-                    backgroundColor: "rgba(255, 99, 132, 0.2)",
-                    borderColor: "rgba(255, 99, 132, 1)",
-                    borderWidth: 1,
-                  },
-                  {
-                    label: "Views",
-                    data: monthlyViewsData,
-                    backgroundColor: "rgba(54, 162, 235, 0.2)",
-                    borderColor: "rgba(54, 162, 235, 1)",
-                    borderWidth: 1,
-                  },
-                ],
-              },
-              options: {
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                  },
-                },
-              },
-            }
-          );
-        })
-        .catch((err) => {
-          console.error("err", err);
-        });
-    </script>
-  </body>
 </html>
