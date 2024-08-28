@@ -13,14 +13,37 @@ config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static("./public"));
 app.use(favicon("./public/favicon-icon.png"));
+// Serve static files with caching and compression
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "public", "images"), {
+    maxAge: "1d", // Cache images for 1 day
+    immutable: true, // Indicates that the file will not change over time
+    etag: true, // Enable ETag for caching
+    lastModified: true, // Enable Last-Modified header
+    setHeaders: (res, path, stat) => {
+      res.set("Cache-Control", "public, max-age=86400, immutable");
+      // Enable CORS if needed
+      res.set("Access-Control-Allow-Origin", "*");
+      // Set content type based on file extension
+      if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
+        res.set("Content-Type", "image/jpeg");
+      } else if (path.endsWith(".png")) {
+        res.set("Content-Type", "image/png");
+      } else if (path.endsWith(".webp")) {
+        res.set("Content-Type", "image/webp");
+      }
+    },
+  })
+);
 
 app.use(
   cors({
     origin: "*",
   })
 );
+
 app.use(
   expressSession({
     secret: process.env.SESSION_SECRET,
