@@ -4,9 +4,12 @@ import expressSession from "express-session";
 import http from "http";
 import morgan from "morgan";
 import path from "path";
-
+import { fileURLToPath } from "url";
 import { config } from "dotenv";
 import favicon from "serve-favicon";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
