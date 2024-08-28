@@ -1,4 +1,5 @@
 import config from "../config/index.js";
+import jwt from "jsonwebtoken";
 
 export function getLogin(req, res, next) {
   res.render("login");
