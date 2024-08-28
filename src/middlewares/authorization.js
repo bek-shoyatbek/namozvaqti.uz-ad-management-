@@ -1,4 +1,5 @@
 import config from "../config/index.js";
+import jwt from "jsonwebtoken";
 
 // Middleware to authenticate the JWT token
 function authenticateToken(req, res, next) {
