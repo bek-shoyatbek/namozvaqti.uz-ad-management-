@@ -1,7 +1,7 @@
 import Ad from "../models/ad.js";
 import { join } from "node:path";
-import { deleteFile } from "../utils/delete-file.js";
-import config from "../config/index.js";
+import { deleteFile } from "../shared/utils/delete-file.js";
+import config from "../shared/config/index.js";
 
 export const deleteAd = async (req, res, next) => {
   try {

@@ -1,6 +1,6 @@
 import Ad from "../models/ad.js";
-import { deleteFile } from "../utils/delete-file.js";
-import { AppError } from "../utils/error/app-error.js";
+import { deleteFile } from "../shared/utils/delete-file.js";
+import { AppError } from "../shared/error/app-error.js";
 import { join } from "node:path";
 
 export const getEditPage = async (req, res, next) => {
@@ -21,7 +21,6 @@ export const editAd = async (req, res, next) => {
 
     const currentAd = await Ad.findOne({ _id: id });
     if (!currentAd) throw new AppError("No such advertisement found", 400);
-    // Delete the old image file if a new one is provided
     if (image && currentAd.image !== image) {
       const oldImagePath = join("/public", currentAd.image);
       await deleteFile(oldImagePath);

@@ -1,4 +1,4 @@
-import { AppError } from "../utils/error/app-error.js";
+import { AppError } from "../shared/error/app-error.js";
 import Ad from "../models/ad.js";
 
 export const handleIncrement = async (req, res, next) => {
@@ -32,7 +32,6 @@ export const handleIncrement = async (req, res, next) => {
       ad.monthlyClicksViews.push(monthDoc);
     }
 
-    // Update clicks/views arrays
     if (prop === "click") {
       if (!todayDoc.clicks.includes(userId)) todayDoc.clicks.push(userId);
       if (!monthDoc.clicks.includes(userId)) monthDoc.clicks.push(userId);
